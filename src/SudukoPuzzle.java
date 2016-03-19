@@ -3,19 +3,27 @@ public class SudukoPuzzle {
 
 	SudukoSquare[][] puzzle;
 	
-	private int size = 9;
-	private int sectionWidth = 3;
-	private int sectionHeight = 3;
+	private int size;
+	private int sectionWidth;
+	private int sectionHeight;
+	public String options = "";
 	
 	public SudukoPuzzle(int[][] p)
 	{
+		this.size = p.length;
+		this.options = "";
+		
+		for(int i = 0; i < this.size; i++)
+		{
+			this.options += i+1;
+		}
+		
+		sectionHeight = size/3;
+		sectionWidth = size/sectionHeight;
 		puzzle = new SudukoSquare[size][size];
-		int yVar = 0;
-		int xVar = 0;
 		int currentSection = 1;
 		for(int y = 0; y < size; y++)
 		{
-			yVar = 0;
 			if(y >= sectionHeight && y < sectionHeight * 2)
 			{
 				currentSection=4;
@@ -30,7 +38,6 @@ public class SudukoPuzzle {
 			
 			for(int x = 0; x < size; x++)
 			{
-				xVar = 0;
 				if(x == sectionWidth)
 				{
 					currentSection++;
@@ -44,6 +51,8 @@ public class SudukoPuzzle {
 				{
 					puzzle[y][x].value = p[y][x]+"";
 					puzzle[y][x].options = null;
+				}else{
+					puzzle[y][x].options = new String(this.options);
 				}
 			}
 		}
@@ -84,7 +93,8 @@ public class SudukoPuzzle {
 	}
 	
 	public String toString(boolean showOptions){
-		String output = "   0         1         2            3         4         5            6         7         8\n |------------------------------------------------------------------------------------------------------\n";
+		String output = " |------------------------------------------------------------------------------------------------------\n";
+		
 		for(int y = 0; y < size; y++)
 		{
 			output += y+"| ";

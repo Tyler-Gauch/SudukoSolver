@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.PriorityQueue;
 
 
@@ -51,42 +52,11 @@ public class SudukoSolver {
 			 }
 		}
 		//Step 3: section
-		int startX = 0;
-		int startY = 0;
-		switch(s.section){
-			case 2:
-				startX = 3;
-				break;
-			case 3:
-				startX = 6;
-				break;
-			case 4:
-				startY = 3;
-				break;
-			case 5:
-				startX = 3;
-				startY = 3;
-				break;
-			case 6:
-				startX = 6;
-				startY = 3;
-				break;
-			case 7:
-				startY = 6;
-				break;
-			case 8:
-				startX = 3;
-				startY = 6;
-				break;
-			case 9:
-				startX = 6;
-				startY = 6;
-				break;
-		}
+		Point start = this.getStartPointForSection(s.section, puzzle);
 		
-		for(int y2 = startY; y2 < startY + puzzle.getSectionHeight(); y2++)
+		for(int y2 = start.y; y2 < start.y + puzzle.getSectionHeight(); y2++)
 		{
-			for(int x2 = startX; x2 < startX + puzzle.getSectionWidth(); x2++)
+			for(int x2 = start.x; x2 < start.x + puzzle.getSectionWidth(); x2++)
 			{
 				SudukoSquare s2 = puzzle.getSquare(x2, y2);
 				if(!s2.equals(s) && !s2.value.equals('-') && s2.value.equals(s.value))
@@ -105,7 +75,7 @@ public class SudukoSolver {
 			for(int x = 0; x < puzzle.getSize(); x++)
 			{
 				SudukoSquare s = puzzle.getSquare(x, y);
-				String options = "123456789";
+				String options = new String(puzzle.options);
 				//TODO: check for options
 				//Step 1: check current row for numbers
 				//Step 2: check current column for numbers
@@ -131,42 +101,11 @@ public class SudukoSolver {
 					 }
 				}
 				//Step 3: section
-				int startX = 0;
-				int startY = 0;
-				switch(s.section){
-					case 2:
-						startX = 3;
-						break;
-					case 3:
-						startX = 6;
-						break;
-					case 4:
-						startY = 3;
-						break;
-					case 5:
-						startX = 3;
-						startY = 3;
-						break;
-					case 6:
-						startX = 6;
-						startY = 3;
-						break;
-					case 7:
-						startY = 6;
-						break;
-					case 8:
-						startX = 3;
-						startY = 6;
-						break;
-					case 9:
-						startX = 6;
-						startY = 6;
-						break;
-				}
+				Point start = this.getStartPointForSection(s.section, puzzle);
 				
-				for(int y2 = startY; y2 < startY + puzzle.getSectionHeight(); y2++)
+				for(int y2 = start.y; y2 < start.y + puzzle.getSectionHeight(); y2++)
 				{
-					for(int x2 = startX; x2 < startX + puzzle.getSectionWidth(); x2++)
+					for(int x2 = start.x; x2 < start.x + puzzle.getSectionWidth(); x2++)
 					{
 						SudukoSquare s2 = puzzle.getSquare(x2, y2);
 						 if(!s2.value.equals("-")){
@@ -226,6 +165,10 @@ public class SudukoSolver {
 		}
 		else{
 			SudukoSquare next = this.getNextSquare(puzzle);
+			if(next == null)
+			{
+				return false;
+			}
 			String options = new String(next.options);
 			for(int i = 0; i < options.length(); i++)
 			{
@@ -247,6 +190,43 @@ public class SudukoSolver {
 			}
 		}
 		return false;
+	}
+	
+	private Point getStartPointForSection(int section, SudukoPuzzle puzzle){
+		Point start = new Point();
+		start.x = 0;
+		start.y = 0;
+		switch(section){
+			case 2:
+				start.x = puzzle.getSectionWidth();
+				break;
+			case 3:
+				start.x = puzzle.getSectionWidth()*2;
+				break;
+			case 4:
+				start.y = puzzle.getSectionHeight();
+				break;
+			case 5:
+				start.x = puzzle.getSectionWidth();
+				start.y = puzzle.getSectionHeight();
+				break;
+			case 6:
+				start.x = puzzle.getSectionWidth()*2;
+				start.y = puzzle.getSectionHeight();
+				break;
+			case 7:
+				start.y = puzzle.getSectionHeight()*2;
+				break;
+			case 8:
+				start.x = puzzle.getSectionWidth();
+				start.y = puzzle.getSectionHeight()*2;
+				break;
+			case 9:
+				start.x = puzzle.getSectionWidth()*2;
+				start.y = puzzle.getSectionHeight()*2;
+				break;
+		}
+		return start;
 	}
 	
 	public static void main(String[] args) {
@@ -277,6 +257,14 @@ public class SudukoSolver {
 				
 		});	
 		
+//		SudukoPuzzle s = new SudukoPuzzle(new int[][]{
+//				{0,0,0,1,0,6},
+//				{6,0,4,0,0,0},
+//				{1,0,2,0,0,0},
+//				{0,0,0,5,0,1},
+//				{0,0,0,6,0,3},
+//				{5,0,6,0,0,0}		
+//		});
 		
 		
 		SudukoSolver solver = new SudukoSolver(s);
