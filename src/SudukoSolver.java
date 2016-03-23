@@ -8,14 +8,11 @@ public class SudukoSolver {
 	{		
 		System.out.println("Attempting to Solve: ");
 		System.out.println(puzzle.toString());
+		long start = System.nanoTime();
 		if(!this.checkOptions(puzzle)){
 			System.err.println("Invalid Puzzle");
 			System.exit(-1);
 		}
-		
-		System.out.println(puzzle.toString(true));
-		
-		long start = System.nanoTime();
 		
 		if(this.solve(puzzle)){
 			long end = System.nanoTime();
@@ -256,7 +253,7 @@ public class SudukoSolver {
 				{0,0,0,2,0,0,5,8,7},
 				
 		});	
-		
+//		
 //		SudukoPuzzle s = new SudukoPuzzle(new int[][]{
 //				{0,0,0,1,0,6},
 //				{6,0,4,0,0,0},
