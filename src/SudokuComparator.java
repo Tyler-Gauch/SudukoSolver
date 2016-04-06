@@ -1,10 +1,10 @@
 import java.util.Comparator;
 
 
-public class SudukoComparator implements Comparator<SudukoSquare>{
+public class SudokuComparator implements Comparator<SudokuSquare>{
 
 	@Override
-	public int compare(SudukoSquare s, SudukoSquare s2) {
+	public int compare(SudokuSquare s, SudokuSquare s2) {
 		// TODO Auto-generated method stub
 		if(s.options == null)
 		{

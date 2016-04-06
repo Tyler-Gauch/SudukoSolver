@@ -1,14 +1,22 @@
+/*
+ * This contains all the work to pull in and parse a sudoku puzzle that can be passed to the solver.
+ */
+public class SudokuPuzzle {
 
-public class SudukoPuzzle {
-
-	SudukoSquare[][] puzzle;
+	SudokuSquare[][] puzzle;
 	
 	private int size;
 	private int sectionWidth;
 	private int sectionHeight;
 	public String options = "";
 	
-	public SudukoPuzzle(int[][] p)
+	/*
+	 * Purpose:
+	 * 		Get an object representation of a puzzle and some relevent information such as section height and width and size
+	 * Parameters:
+	 * 		p:  A 2 dimensional array holding the numbers that make up the puzzle, 0 is a blank square
+	 */
+	public SudokuPuzzle(int[][] p)
 	{
 		this.size = p.length;
 		this.options = "";
@@ -18,9 +26,10 @@ public class SudukoPuzzle {
 			this.options += i+1;
 		}
 		
+		//create the puzzle as a 2 dimensional array of SudukoSquares and calculate the section height and width
 		sectionHeight = size/3;
 		sectionWidth = size/sectionHeight;
-		puzzle = new SudukoSquare[size][size];
+		puzzle = new SudokuSquare[size][size];
 		int currentSection = 1;
 		for(int y = 0; y < size; y++)
 		{
@@ -46,7 +55,7 @@ public class SudukoPuzzle {
 				{
 					currentSection++;
 				}
-				puzzle[y][x] = new SudukoSquare(x, y, currentSection);
+				puzzle[y][x] = new SudokuSquare(x, y, currentSection);
 				if(p[y][x] != 0)
 				{
 					puzzle[y][x].value = p[y][x]+"";
@@ -58,23 +67,39 @@ public class SudukoPuzzle {
 		}
 	}
 	
+	/*
+	 * Getter for size
+	 */
 	public int getSize(){
 		return this.size;
 	}
-	
+	/*
+	 * Getter for section width
+	 */
 	public int getSectionWidth(){
 		return this.sectionWidth;
 	}
-	
+	/*
+	 * Getter for section height
+	 */
 	public int getSectionHeight(){
 		return this.sectionHeight;
 	}
 	
-	public SudukoSquare getSquare(int x, int y)
+	/*
+	 * Getter for an individual square
+	 */
+	public SudokuSquare getSquare(int x, int y)
 	{
 		return this.puzzle[y][x];
 	}
 	
+	/*
+	 * Purpose:
+	 * 		Check if the puzzle is solved
+	 * Result:
+	 * 		True if all options are filled false otherwise
+	 */
 	public boolean isSolved(){
 		for(int y = 0; y < size; y++){
 			for(int x = 0; x < size; x++){
@@ -92,6 +117,14 @@ public class SudukoPuzzle {
 		return toString(false);
 	}
 	
+	/*
+	 * Purpose:
+	 * 		Print a text representation of the grid
+	 * Parameters:
+	 * 		showOptions: will show what the available options for each square are
+	 * Results:
+	 * 		A string representing the grid 
+	 */
 	public String toString(boolean showOptions){
 		String output = " |------------------------------------------------------------------------------------------------------\n";
 		
@@ -100,7 +133,7 @@ public class SudukoPuzzle {
 			output += y+"| ";
 			for(int x = 0; x < size; x++)
 			{
-				SudukoSquare s = puzzle[y][x];
+				SudokuSquare s = puzzle[y][x];
 				String value = "";
 				if(s.value.equals("-") && showOptions)
 				{

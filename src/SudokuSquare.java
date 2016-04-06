@@ -1,12 +1,14 @@
-
-public class SudukoSquare {
+/*
+ * Object to hold information for each individual grid square for a puzzle
+ */
+public class SudokuSquare {
 	public int column;
 	public int row;
 	public int section;
 	public String value;
 	public String options;
 	
-	public SudukoSquare(int column, int row, int section)
+	public SudokuSquare(int column, int row, int section)
 	{
 		this.column = column;
 		this.row = row;
@@ -16,7 +18,7 @@ public class SudukoSquare {
 		this.value = "-";
 	}
 	
-	public boolean equals(SudukoSquare s)
+	public boolean equals(SudokuSquare s)
 	{
 		return this.column == s.column && this.row == s.row;
 	}

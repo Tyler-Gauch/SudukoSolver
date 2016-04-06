@@ -13,6 +13,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 import static org.opencv.core.Core.bitwise_not;
 import static org.opencv.core.Core.max;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     private final String TAG = "MainActivity";
     private CameraBridgeViewBase mOpenCvCameraView;
     private GridDetector bd;
-
+    private DigitRecognizer dr;
 
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     public void onCameraViewStarted(int width, int height) {
         bd = new GridDetector();
+        dr = new DigitRecognizer();
     }
 
     @Override
@@ -109,7 +111,16 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         if(bd.foundGrid)
         {
-            rectangle(color, new Point(bd.gridRect.x, bd.gridRect.y), new Point(bd.gridRect.x+bd.gridRect.width, bd.gridRect.y+bd.gridRect.height), CommonUtils.GREEN,20);
+            Point br1 = new Point(bd.gridRect.x, bd.gridRect.y);
+            Point br2 = new Point(bd.gridRect.x+bd.gridRect.width, bd.gridRect.y+bd.gridRect.height);
+            rectangle(color, br1, br2, CommonUtils.GREEN,20);
+
+            //process to find the digits
+            dr.process(gray, bd.gridRect);
+            for(Rect r : dr.rectangles){
+                rectangle(color, new Point(r.x+br1.x, r.y+br1.y), new Point(r.x+r.width+br1.x, r.y+r.height+br1.y), CommonUtils.RED, 5);
+            }
+
         }else
         {
             //if we didn't find the puzzle display the area to crop in

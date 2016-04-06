@@ -2,9 +2,15 @@ import java.awt.Point;
 import java.util.PriorityQueue;
 
 
-public class SudukoSolver {
+public class SudokuSolver {
 
-	public SudukoSolver(SudukoPuzzle puzzle)
+	/*
+	 * Purpose:
+	 * 		Creates a SudokuSolver and attempts to solve the given puzzle
+	 * Parameters
+	 * 		puzzle: SudokuPuzzle to be solved
+	 */
+	public SudokuSolver(SudokuPuzzle puzzle)
 	{		
 		System.out.println("Attempting to Solve: ");
 		System.out.println(puzzle.toString());
@@ -24,17 +30,26 @@ public class SudukoSolver {
 		System.out.println(puzzle);
 	}
 	
-	private boolean checkSafe(SudukoSquare s, SudukoPuzzle puzzle)
+	/*
+	 * Purpose:
+	 * 		Check if we add a number to a square if it is a valid option.  Checks the row, column, and section for an occurrence of the selected value
+	 * Parameters:
+	 * 		s: A SudokuSquare with updated value to check
+	 * 		puzzle: SudokuPuzzle to check against
+	 * Returns:
+	 * 		true: if safe to put number in that square
+	 * 		false: if not safe to put number in that square
+	 */
+	private boolean checkSafe(SudokuSquare s, SudokuPuzzle puzzle)
 	{
-		//TODO: check for options
 		//Step 1: check current row for numbers
 		//Step 2: check current column for numbers
 		//Step 3: check current section for numbers
-		
+
 		//Step 1: row
 		for(int x2 = 0; x2 < puzzle.getSize(); x2++){
 		
-			 SudukoSquare s2 = puzzle.getSquare(x2, s.row);
+			 SudokuSquare s2 = puzzle.getSquare(x2, s.row);
 			 if(!s2.equals(s) && !s2.value.equals('-') && s2.value.equals(s.value))
 			 {
 				 return false;
@@ -42,7 +57,7 @@ public class SudukoSolver {
 		}
 		//Step 2: column
 		for(int y2 = 0; y2 < puzzle.getSize(); y2++){
-			 SudukoSquare s2 = puzzle.getSquare(s.column, y2);
+			 SudokuSquare s2 = puzzle.getSquare(s.column, y2);
 			 if(!s2.equals(s) && !s2.value.equals('-') && s2.value.equals(s.value))
 			 {
 				 return false;
@@ -55,7 +70,7 @@ public class SudukoSolver {
 		{
 			for(int x2 = start.x; x2 < start.x + puzzle.getSectionWidth(); x2++)
 			{
-				SudukoSquare s2 = puzzle.getSquare(x2, y2);
+				SudokuSquare s2 = puzzle.getSquare(x2, y2);
 				if(!s2.equals(s) && !s2.value.equals('-') && s2.value.equals(s.value))
 				 {
 					 return false;
@@ -66,12 +81,21 @@ public class SudukoSolver {
 		return true;
 	}
 	
-	private boolean checkOptions(SudukoPuzzle puzzle){
+	/*
+	 * Purpose:
+	 * 		This is the initial test to find what options each square has available to it.  If we reach a square with only 1 option left we recurrsivly run the function
+	 * Parameters:
+	 * 		puzzle: SudokuPuzzle to parse
+	 * Return:
+	 * 		true: if we were able to find options for all squares
+	 * 		false: if we were able to find a square with no possible options.  if this happens the puzzle is not solveable.
+	 */
+	private boolean checkOptions(SudokuPuzzle puzzle){
 		for(int y = 0; y < puzzle.getSize(); y++)
 		{
 			for(int x = 0; x < puzzle.getSize(); x++)
 			{
-				SudukoSquare s = puzzle.getSquare(x, y);
+				SudokuSquare s = puzzle.getSquare(x, y);
 				String options = new String(puzzle.options);
 				//TODO: check for options
 				//Step 1: check current row for numbers
@@ -81,7 +105,7 @@ public class SudukoSolver {
 				//Step 1: row
 				for(int x2 = 0; x2 < puzzle.getSize(); x2++){
 				
-					 SudukoSquare s2 = puzzle.getSquare(x2, y);
+					 SudokuSquare s2 = puzzle.getSquare(x2, y);
 					 if(!s2.value.equals("-")){
 						 options = options.replace(s2.value, "");
 					 }else if(!s2.equals(s) && !s.value.equals("-") && s2.value.equals(s.value)){
@@ -90,7 +114,7 @@ public class SudukoSolver {
 				}
 				//Step 2: column
 				for(int y2 = 0; y2 < puzzle.getSize(); y2++){
-					 SudukoSquare s2 = puzzle.getSquare(x, y2);
+					 SudokuSquare s2 = puzzle.getSquare(x, y2);
 					 if(!s2.value.equals("-")){
 						options = options.replace(s2.value, "");
 					 }else if(!s2.equals(s) && !s.value.equals("-") && s2.value.equals(s.value)){
@@ -104,7 +128,7 @@ public class SudukoSolver {
 				{
 					for(int x2 = start.x; x2 < start.x + puzzle.getSectionWidth(); x2++)
 					{
-						SudukoSquare s2 = puzzle.getSquare(x2, y2);
+						SudokuSquare s2 = puzzle.getSquare(x2, y2);
 						 if(!s2.value.equals("-")){
 							options = options.replace(s2.value, "");
 						 }else if(!s2.equals(s) && !s.value.equals("-") && s2.value.equals(s.value)){
@@ -113,12 +137,12 @@ public class SudukoSolver {
 					}
 				}
 				
-				if(options.length() == 1 && s.value.equals("-"))
+				if(options.length() == 1 && s.value.equals("-"))  //if we have a square that could only have 1 possibility recursively check options again with the new value
 				{
 					s.options = null;
 					s.value = options;
 					return this.checkOptions(puzzle);
-				}else if(options.length() == 0 && s.value.equals("-"))
+				}else if(options.length() == 0 && s.value.equals("-")) //we found a square with no options we have an invalid puzzle
 				{
 					return false;
 				}
@@ -135,8 +159,16 @@ public class SudukoSolver {
 		return true;
 	}
 	
-	private SudukoSquare getNextSquare(SudukoPuzzle puzzle){
-		SudukoSquare next = null;
+	/*
+	 * Purpose:
+	 * 		Loop through the puzzle and find the next square with the least amount of options
+	 * Parameters:
+	 * 		puzzle: The SudokuPuzzle to search through
+	 * Return:
+	 * 		the next square to attempt to fill in.  If this is null there are no square left to fill.
+	 */
+	private SudokuSquare getNextSquare(SudokuPuzzle puzzle){
+		SudokuSquare next = null;
 		for(int y = 0; y < puzzle.getSize(); y++)
 		{
 			for(int x = 0; x < puzzle.getSize(); x++){
@@ -154,33 +186,50 @@ public class SudukoSolver {
 		return next;
 	}
 	
-	private boolean solve(SudukoPuzzle puzzle)
+	/*
+	 * Purpose:
+	 * 		Solve the puzzle
+	 * Parameters:
+	 * 		puzzle: SudokuPuzzle to solve
+	 * Returns:
+	 * 		true: if we were able to solve the puzzle
+	 * 		false: if we wern't able to solve the puzzle
+	 */
+	private boolean solve(SudokuPuzzle puzzle)
 	{
+		//return if we solved the puzzle
 		if(puzzle.isSolved())
 		{
 			return true;
 		}
-		else{
-			SudukoSquare next = this.getNextSquare(puzzle);
+		else{ //if we aren't solved
+			//get the next square that has the lowest number of options available
+			SudokuSquare next = this.getNextSquare(puzzle);
 			if(next == null)
 			{
+				//if its null we have no squares to fill
 				return false;
 			}
+			//get the available options
 			String options = new String(next.options);
 			for(int i = 0; i < options.length(); i++)
 			{
-				next.value = options.charAt(i)+"";
-				next.options = null;
-				if(checkSafe(next, puzzle))
+				next.value = options.charAt(i)+""; //get next available option
+				next.options = null;				//mark it as set
+				if(checkSafe(next, puzzle))	//see if we can put that number there
 				{
+					//if we can try and solve the puzzle with that number in that position
 					if(solve(puzzle))
 					{
+						//if we solved woohoo return true
 						return true;
 					}else{
+						//if we didn't solve backtrack resetting the options and value
 						next.value = "-";
 						next.options = options;
 					}
 				}else{
+					//if the number was not safe there backtrack resetting the options and value
 					next.value = "-";
 					next.options = options;
 				}
@@ -189,7 +238,16 @@ public class SudukoSolver {
 		return false;
 	}
 	
-	private Point getStartPointForSection(int section, SudukoPuzzle puzzle){
+	/*
+	 * Purpose:
+	 * 		Helper function to find the starting position of the square given what section we want
+	 * Parameters:
+	 * 		section: the integer value of which section, for example a 9x9 is broken into 9 sections of 3x3 grids
+	 * 		puzzle: the puzzle in which we are getting the section for
+	 * Result:
+	 * 		a point containing the x, y values matching the indexes of the puzzle that start the section
+	 */
+	private Point getStartPointForSection(int section, SudokuPuzzle puzzle){
 		Point start = new Point();
 		start.x = 0;
 		start.y = 0;
@@ -228,7 +286,7 @@ public class SudukoSolver {
 	
 	public static void main(String[] args) {
 		
-//		SudukoPuzzle s = new SudukoPuzzle(new int[][]{
+//		SudokuPuzzle s = new SudokuPuzzle(new int[][]{
 //				{0,0,2,0,0,5,0,7,9},
 //				{1,0,5,0,0,3,0,0,0},
 //				{0,0,0,0,0,0,6,0,0},
@@ -241,7 +299,7 @@ public class SudukoSolver {
 //				
 //		});	
 		
-		SudukoPuzzle s = new SudukoPuzzle(new int[][]{
+		SudokuPuzzle s = new SudokuPuzzle(new int[][]{
 				{1,9,3,0,0,8,0,0,0},
 				{0,0,0,3,0,0,0,0,0},
 				{2,0,5,0,0,9,0,0,3},
@@ -254,7 +312,7 @@ public class SudukoSolver {
 				
 		});	
 //		
-//		SudukoPuzzle s = new SudukoPuzzle(new int[][]{
+//		SudokuPuzzle s = new SudokuPuzzle(new int[][]{
 //				{0,0,0,1,0,6},
 //				{6,0,4,0,0,0},
 //				{1,0,2,0,0,0},
@@ -264,7 +322,7 @@ public class SudukoSolver {
 //		});
 		
 		
-		SudukoSolver solver = new SudukoSolver(s);
+		SudokuSolver solver = new SudokuSolver(s);
 	}
 
 }

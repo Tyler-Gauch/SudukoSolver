@@ -34,7 +34,7 @@ public class GridDetector {
     public Rect gridRect;
 
     // Cache
-    private Mat mDilatedMask;
+    public Mat mDilatedMask;
     private Mat mHierarchy;
     private Mat blur;
     private Mat outerBox;
